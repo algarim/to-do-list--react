@@ -1,5 +1,6 @@
 import ToDoItem from "../ToDoItem/ToDoItem"
 import { useState, useEffect } from "react"
+import Counter from "../NewTaskInput/NewTaskInput";
 
 const ToDoList = () => {
     const [newTask, setNewTask] = useState("");

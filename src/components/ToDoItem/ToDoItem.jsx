@@ -1,9 +1,10 @@
-import React from 'react'
 
-const ToDoItem = ({toDo, deleteToDo}) => {
+
+const ToDoItem = ({toDo, numberOfItems, deleteToDo}) => {
   return (
     <li>
-        <span>{toDo}</span>
+        <span>{toDo} - {numberOfItems}</span>
+        <span>Pendientes</span>
         <button onClick={() => deleteToDo(toDo)}>Borrar</button>
     </li>
   )
