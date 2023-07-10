@@ -5,14 +5,23 @@ import './ToDoItem.css'
 
 const ToDoItem = ({ name, quantity, addedQuantity, deleteToDo }) => {
 
+  // Grab saved toDo list from localStorage
+  const savedToDos = JSON.parse(localStorage.getItem("ToDos")) || [];
+
   // Set a state that tracks the number of items in a task that are still pending completion.
-  const [pending, setPending] = useState(quantity);
+  const [pending, setPending] = useState(() => {
+    const existingToDo = savedToDos.find(toDo => { toDo.name === name });
+
+    let initialPending = existingToDo ? existingToDo.pending : quantity;
+
+    return initialPending;
+  });
 
 
   // If quantity changes (by adding a repeat), pending changes correspondingly
-  useEffect ( () => {
-    setPending( prev => prev + addedQuantity);
-  }, [quantity] )
+  useEffect(() => {
+    setPending(prev => prev + addedQuantity);
+  }, [quantity]);
 
   // COUNTER
 
@@ -34,9 +43,9 @@ const ToDoItem = ({ name, quantity, addedQuantity, deleteToDo }) => {
   const handleCounterChange = (e) => {
     let input = Number(e.target.value);
 
-    if(input <= 1){
+    if (input <= 1) {
       setCounter(1);
-    } else if(input <= pending){
+    } else if (input <= pending) {
       setCounter(input);
     } else {
       setCounter(pending);
@@ -60,19 +69,32 @@ const ToDoItem = ({ name, quantity, addedQuantity, deleteToDo }) => {
   }
 
   return (
-    <li className={(pending === 0) && 'completed' }>
-      <span>{name} - {quantity}  |  Pendientes: {pending}</span>
+    <li className={`${(pending === 0) && 'completed'} todo-item-container`}>
 
-      <form>
-        <button type="submit" onClick={(e) => completeTask(e, counter)}>Completar</button>
+      <h2 className="todo-description"> {name}</h2>
+      <h3 className="todo-quantity"> Cantidad: {quantity} </h3>
 
-        <button type="button" onClick={decreaseCounter}> - </button>
-        <input type="number" value={counter} onChange={handleCounterChange}/>
-        <button type="button" onClick={increaseCounter}> + </button>
+      <h3 className="todo-quantity pending">Pendientes: {pending}</h3>
+
+      <form className="complete-todo-form">
+        <button type="submit" className="complete-todo-btn complete-todo-hover" onClick={(e) => completeTask(e, counter)}>Completar</button>
+
+        <div className="counter">
+          <button type="button" className="counter-btn complete-todo-hover" onClick={decreaseCounter}> - </button>
+          <input type="number" className="counter-input" value={counter} onChange={handleCounterChange} />
+          <button type="button" className="counter-btn complete-todo-hover" onClick={increaseCounter}> + </button>
+        </div>
+
       </form>
 
-      <button onClick={() => deleteToDo(name)}>Borrar</button>
-      <button onClick={() => resetTask(name)}>Reestablecer</button>
+
+
+
+
+      <div className="todo-item-btns">
+        <button className="delete-todo-btn" onClick={() => deleteToDo(name)}>Borrar</button>
+        <button className="reset-todo-btn" onClick={() => resetTask(name)}>Reestablecer</button>
+      </div>
     </li>
   )
 }

@@ -1,6 +1,9 @@
 import ToDoItem from "../ToDoItem/ToDoItem"
 import { useState, useEffect } from "react"
 
+// CSS
+import './ToDoList.css'
+
 const ToDoList = () => {
     const [newTask, setNewTask] = useState({ name: "", quantity: 0, addedQuantity: 0, pending: 0 });
 
@@ -98,17 +101,19 @@ const ToDoList = () => {
 
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input type="text" value={newTask.name} placeholder="Ingrese una tarea" onChange={handleInputChange} />
+        <div className="todo-list-container">
+            <h1> Lista de tareas </h1>
 
-                <div>
-                    <button type="button" onClick={decreaseCounter}> - </button>
-                    <input type="number" value={counter} onChange={handleCounterChange} />
-                    <button type="button" onClick={increaseCounter}> + </button>
+            <form onSubmit={handleSubmit} className="add-todo-form">
+                <input type="text" value={newTask.name} onChange={handleInputChange} />
+
+                <div className="counter">
+                    <button type="button" className="counter-btn" onClick={decreaseCounter}> - </button>
+                    <input type="number" className="counter-input" value={counter} onChange={handleCounterChange} />
+                    <button type="button" className="counter-btn" onClick={increaseCounter}> + </button>
                 </div>
 
-                <button type="submit">Agregar tarea</button>
+                <button type="submit" className="add-todo-btn">Agregar</button>
             </form>
 
             <ul>

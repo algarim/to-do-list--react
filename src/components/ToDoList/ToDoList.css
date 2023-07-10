@@ -1,0 +1,60 @@
+.todo-list-container {
+    margin: auto;
+    padding: 15px;
+    
+    background-color: rgba(245, 195, 245, 0.85);
+    width: max-content;
+    max-width: 60vw;
+    border: 1px black solid;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-todo-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.counter {
+    border: 1px solid black;
+    max-width: max-content;
+}
+
+.counter-input {
+    width: 35px;
+    border: 0;
+}
+
+.counter-btn{
+    border: 0;
+    border-radius: 0;
+    padding: 8px 12px;
+}
+
+.add-todo-btn{
+    margin-left: 10px;
+}
+
+
+@media (max-width: 800px) {
+
+    .container {
+        max-width: 95vw;
+        padding: 0;
+        padding-bottom: 15px;
+        padding-right: 3%;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .container {
+        width: 95vw;
+        padding-right: 0;
+    }
+}
