@@ -20,3 +20,6 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
+
+/* FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');

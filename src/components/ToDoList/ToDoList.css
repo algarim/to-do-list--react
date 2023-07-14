@@ -1,8 +1,8 @@
 .todo-list-container {
     margin: auto;
     padding: 15px;
-    
-    background-color: rgba(245, 195, 245, 0.85);
+
+    background-color: rgba(195, 200, 245, 0.85);
     width: max-content;
     max-width: 60vw;
     border: 1px black solid;
@@ -14,15 +14,20 @@
     align-items: center;
 }
 
-.add-todo-form{
+.add-todo-form {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+
+    margin: 0 5px 15px 5px
 }
 
 .counter {
     border: 1px solid black;
     max-width: max-content;
+    background-color: white;
+    white-space: nowrap;
 }
 
 .counter-input {
@@ -30,31 +35,38 @@
     border: 0;
 }
 
-.counter-btn{
+.counter-btn {
     border: 0;
     border-radius: 0;
     padding: 8px 12px;
 }
 
-.add-todo-btn{
+.add-todo-btn {
     margin-left: 10px;
 }
 
+.todo-item-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-evenly;
+    gap: 20px;
 
-@media (max-width: 800px) {
+}
 
-    .container {
-        max-width: 95vw;
-        padding: 0;
-        padding-bottom: 15px;
-        padding-right: 3%;
+
+@media (max-width: 756px) {
+
+    .todo-list-container {
+        max-width: 85vw;
+
     }
 }
 
 @media (max-width: 480px) {
+    .todo-list-container {
+        max-width: 90vw;
+        padding: 0;
 
-    .container {
-        width: 95vw;
-        padding-right: 0;
     }
 }

@@ -1,15 +1,24 @@
+body{
+    background-image: url("../img/galaxy.jpg");
+    background-size: cover;
+
+    font-family: 'Space Mono', monospace;
+}
+
 button {
     padding: 8px;
     border: 1px black solid;
 
-    font-size: 1.1rem;
-    font-family: 'atari';
+    background-color: whitesmoke;
+
+    font-size: 1.05rem;
+    font-family: 'Space Mono', monospace;
 
     cursor: pointer;
 }
 
 button:hover{
-    background-color: rgba(174, 162, 240, 0.85);
+    background-color: rgba(199, 223, 255, 0.85);
 }
 
 input{
@@ -17,8 +26,8 @@ input{
     border: 1px black solid;
     border-right: 0;
     
-    font-size: 1.1rem;
-    font-family: 'atari';
+    font-size: 1.05rem;
+    font-family: 'Space Mono', monospace;
 
     text-align: center;
 }
@@ -29,5 +38,6 @@ p{
 
 ul {
     list-style-type: none;
+    padding: 0;
 }
 

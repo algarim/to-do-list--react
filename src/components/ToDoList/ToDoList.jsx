@@ -1,21 +1,15 @@
 import ToDoItem from "../ToDoItem/ToDoItem"
-import { useState, useEffect } from "react"
+import { useState, useContext } from "react";
+import { ToDoContext } from "../../context/ToDoContext";
 
 // CSS
 import './ToDoList.css'
 
 const ToDoList = () => {
-    const [newTask, setNewTask] = useState({ name: "", quantity: 0, addedQuantity: 0, pending: 0 });
+    // Create a state for the new task we will add to the list
+    const [newTask, setNewTask] = useState({ name: "", quantity: 0, pending: 0 });
 
-    // addedQuantity tracks the quantity added to an already existing task
-
-    const [toDos, setToDos] = useState(() => {
-        const savedToDos = localStorage.getItem("ToDos");
-
-        const startingToDos = savedToDos ? JSON.parse(savedToDos) : [];
-
-        return startingToDos;
-    });
+    const { toDos, addToDo } = useContext(ToDoContext);
 
     // COUNTER
 
@@ -31,42 +25,8 @@ const ToDoList = () => {
         }
     }
 
-    // AUXILIARY FUNCTIONS: delete and add toDo (joining repeats together)
 
-    const deleteToDo = (taskName) => {
-        const newToDos = toDos.filter((toDo) => toDo.name !== taskName);
-        setToDos(newToDos);
-    }
-
-    const addToDo = (task, quantity) => {
-        const existingToDo = toDos.find(toDo => toDo.name === task);
-
-        if (existingToDo) {
-            const updatedToDos = toDos.map( toDo => {
-                if (toDo === existingToDo){
-                    return {...existingToDo, quantity: existingToDo.quantity + quantity, pending: existingToDo.pending + quantity, addedQuantity: quantity};
-                }
-                else{
-                    return toDo;
-                }
-            } )
-
-            setToDos(updatedToDos);
-        } 
-        
-        else {
-            const newToDo = {
-                name: task,
-                quantity: quantity,
-                addedQuantity: 0,
-                pending: quantity
-            }
-            setToDos([...toDos, newToDo]);
-        }
-
-        setCounter(1);
-    }
-
+    // HANDLER FUNCTIONS
 
     // Counter Event Handler
     const handleCounterChange = (e) => {
@@ -83,7 +43,9 @@ const ToDoList = () => {
 
         if (taskName.trim()) {
             addToDo(taskName, counter);
-            setNewTask({ name: "", quantity: 0, addedQuantity: 0, pending: 0 });
+            
+            setNewTask({ name: "", quantity: 0, pending: 0 });
+            setCounter(1);
         }
     }
 
@@ -92,12 +54,6 @@ const ToDoList = () => {
         let newTaskName = e.target.value;
         setNewTask({ ...newTask, name: newTaskName });
     }
-
-
-    // Save the list in localStorage every time it changes
-    useEffect(() => {
-        localStorage.setItem("ToDos", JSON.stringify(toDos));
-    }, [toDos])
 
 
     return (
@@ -116,15 +72,13 @@ const ToDoList = () => {
                 <button type="submit" className="add-todo-btn">Agregar</button>
             </form>
 
-            <ul>
+            <ul className="todo-item-list-container">
                 {
                     toDos.map((toDo, index) => (
                         <ToDoItem
                             key={index}
                             name={toDo.name}
-                            quantity={toDo.quantity}
-                            addedQuantity={toDo.addedQuantity}
-                            deleteToDo={deleteToDo} />
+                            quantity={toDo.quantity}/>
                     ))
                 }
             </ul>

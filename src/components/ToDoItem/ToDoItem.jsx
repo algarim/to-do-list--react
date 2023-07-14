@@ -1,27 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ToDoContext } from "../../context/ToDoContext";
 
 // CSS
 import './ToDoItem.css'
 
-const ToDoItem = ({ name, quantity, addedQuantity, deleteToDo }) => {
+const ToDoItem = ({ name, quantity }) => {
 
-  // Grab saved toDo list from localStorage
-  const savedToDos = JSON.parse(localStorage.getItem("ToDos")) || [];
+  const { toDos, deleteToDo, changePending } = useContext(ToDoContext);
 
-  // Set a state that tracks the number of items in a task that are still pending completion.
-  const [pending, setPending] = useState(() => {
-    const existingToDo = savedToDos.find(toDo => { toDo.name === name });
-
-    let initialPending = existingToDo ? existingToDo.pending : quantity;
-
-    return initialPending;
-  });
-
-
-  // If quantity changes (by adding a repeat), pending changes correspondingly
-  useEffect(() => {
-    setPending(prev => prev + addedQuantity);
-  }, [quantity]);
+  // Define variables for the particular toDo we are working with and its pending number:
+  let selectedToDo = toDos.find ( toDo => toDo.name === name );
+  let pending = selectedToDo.pending;
 
   // COUNTER
 
@@ -54,18 +43,17 @@ const ToDoItem = ({ name, quantity, addedQuantity, deleteToDo }) => {
 
   // Function that completes the number of tasks given by the counter
 
-  const completeTask = (e, quantity) => {
-    if (pending >= counter) {
-      e.preventDefault();
-      setPending(prev => prev - quantity);
-
+  const completeTask = (e, taskName, numberCompleted) => {
+    e.preventDefault();
+    if (pending >= numberCompleted) {
+      changePending(taskName, pending - numberCompleted );
       setCounter(1);
     }
   }
 
   // Function that resets "pending" to its original number
-  const resetTask = () => {
-    setPending(quantity);
+  const resetTask = (taskName) => {
+    changePending(taskName, quantity);
   }
 
   return (
@@ -77,7 +65,7 @@ const ToDoItem = ({ name, quantity, addedQuantity, deleteToDo }) => {
       <h3 className="todo-quantity pending">Pendientes: {pending}</h3>
 
       <form className="complete-todo-form">
-        <button type="submit" className="complete-todo-btn complete-todo-hover" onClick={(e) => completeTask(e, counter)}>Completar</button>
+        <button type="submit" className="complete-todo-btn complete-todo-hover" onClick={(e) => completeTask(e, name, counter)}>Completar</button>
 
         <div className="counter">
           <button type="button" className="counter-btn complete-todo-hover" onClick={decreaseCounter}> - </button>
