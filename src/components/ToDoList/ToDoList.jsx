@@ -1,6 +1,7 @@
 import ToDoItem from "../ToDoItem/ToDoItem"
 import { useState, useContext } from "react";
 import { ToDoContext } from "../../context/ToDoContext";
+import { useParams } from "react-router-dom";
 
 // CSS
 import './ToDoList.css'
@@ -9,7 +10,13 @@ const ToDoList = () => {
     // Create a state for the new task we will add to the list
     const [newTask, setNewTask] = useState({ name: "", quantity: 0, pending: 0 });
 
-    const { toDos, addToDo } = useContext(ToDoContext);
+    const { lists, addToDo } = useContext(ToDoContext);
+
+    // Implement useParams to track which list we are working on
+    const { idList } = useParams();
+
+    // Define a variable for the toDos of the selected list
+    let toDos = lists.find( list => list.id === idList ).toDos;
 
     // COUNTER
 
@@ -42,8 +49,8 @@ const ToDoList = () => {
         let taskName = newTask.name;
 
         if (taskName.trim()) {
-            addToDo(taskName, counter);
-            
+            addToDo(idList, taskName, counter);
+
             setNewTask({ name: "", quantity: 0, pending: 0 });
             setCounter(1);
         }
@@ -78,7 +85,7 @@ const ToDoList = () => {
                         <ToDoItem
                             key={index}
                             name={toDo.name}
-                            quantity={toDo.quantity}/>
+                            quantity={toDo.quantity} />
                     ))
                 }
             </ul>
