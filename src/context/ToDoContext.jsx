@@ -26,7 +26,7 @@ export const ToDoProvider = ({ children }) => {
 
         const updatedLists = lists.map(list => {
             if (list.id === idList) {
-                return { id: idList, todos: newList };
+                return { id: idList, name: list.name, toDos: newList };
             } else {
                 return list;
             }
@@ -37,6 +37,36 @@ export const ToDoProvider = ({ children }) => {
 
 
     // METHODS: 
+
+    // Add list
+    const addList = (name)  => {
+        const id = name.replaceAll(' ', '-').toLowerCase();
+        
+        const existingList = lists.find ( list => list.id === id );
+        const newListID = existingList ? `${id}-1` : id;
+
+        const newList = { id: newListID, name: name, toDos: [] };
+        setLists( [...lists, newList] );
+    }
+
+    // Change name of list
+    const changeListName = (idList, newName) => {
+        const updatedLists = lists.map ( list => {
+            if (list.id === idList){
+                return {id: idList, name: newName, toDos: list.toDos};
+            } else {
+                return list;
+            }
+        } );
+
+        setLists(updatedLists);
+    }
+
+    // Delete list
+    const deleteList = (idList) => {
+        const updatedLists = lists.filter ( list => list.id !== idList );
+        setLists(updatedLists);
+    };
 
     // Delete to-do from list
     const deleteToDo = (idList, taskName) => {
@@ -102,7 +132,7 @@ export const ToDoProvider = ({ children }) => {
     };
 
     return (
-        <ToDoContext.Provider value={{ lists, addToDo, deleteToDo, changePending }}>
+        <ToDoContext.Provider value={{ lists, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
             {children}
         </ToDoContext.Provider>
     )

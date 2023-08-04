@@ -1,15 +1,16 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { ToDoContext } from "../../context/ToDoContext";
 
 // CSS
 import './ToDoItem.css'
 
-const ToDoItem = ({ name, quantity }) => {
+const ToDoItem = ({ idList, itemName, quantity }) => {
 
-  const { toDos, deleteToDo, changePending } = useContext(ToDoContext);
+  const { lists, deleteToDo, changePending } = useContext(ToDoContext);
 
   // Define variables for the particular toDo we are working with and its pending number:
-  let selectedToDo = toDos.find ( toDo => toDo.name === name );
+  let selectedList = lists.find ( list => list.id === idList );
+  let selectedToDo = selectedList.toDos.find ( toDo => toDo.name === itemName );
   let pending = selectedToDo.pending;
 
   // COUNTER
@@ -46,26 +47,26 @@ const ToDoItem = ({ name, quantity }) => {
   const completeTask = (e, taskName, numberCompleted) => {
     e.preventDefault();
     if (pending >= numberCompleted) {
-      changePending(taskName, pending - numberCompleted );
+      changePending(idList, taskName, pending - numberCompleted );
       setCounter(1);
     }
   }
 
   // Function that resets "pending" to its original number
   const resetTask = (taskName) => {
-    changePending(taskName, quantity);
+    changePending(idList, taskName, quantity);
   }
 
   return (
     <li className={`${(pending === 0) && 'completed'} todo-item-container`}>
 
-      <h2 className="todo-description"> {name}</h2>
+      <h2 className="todo-description"> {itemName}</h2>
       <h3 className="todo-quantity"> Cantidad: {quantity} </h3>
 
       <h3 className="todo-quantity pending">Pendientes: {pending}</h3>
 
       <form className="complete-todo-form">
-        <button type="submit" className="complete-todo-btn complete-todo-hover" onClick={(e) => completeTask(e, name, counter)}>Completar</button>
+        <button type="submit" className="complete-todo-btn complete-todo-hover" onClick={(e) => completeTask(e, itemName, counter)}>Completar</button>
 
         <div className="counter">
           <button type="button" className="counter-btn complete-todo-hover" onClick={decreaseCounter}> - </button>
@@ -76,12 +77,9 @@ const ToDoItem = ({ name, quantity }) => {
       </form>
 
 
-
-
-
       <div className="todo-item-btns">
-        <button className="delete-todo-btn" onClick={() => deleteToDo(name)}>Borrar</button>
-        <button className="reset-todo-btn" onClick={() => resetTask(name)}>Reestablecer</button>
+        <button className="delete-todo-btn" onClick={() => deleteToDo(idList, itemName)}>Borrar</button>
+        <button className="reset-todo-btn" onClick={() => resetTask(idList, itemName)}>Reestablecer</button>
       </div>
     </li>
   )
