@@ -1,5 +1,5 @@
 import ToDoList from "./components/ToDoList/ToDoList"
-import NavBar from "./components/NavBar/Navbar"
+import NavBar from "./components/NavBar/NavBar"
 import Home from "./components/Home/Home"
 import { ToDoProvider } from "./context/ToDoContext"
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom"
