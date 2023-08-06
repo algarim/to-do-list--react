@@ -53,8 +53,8 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
   }
 
   // Function that resets "pending" to its original number
-  const resetTask = (taskName) => {
-    changePending(idList, taskName, quantity);
+  const resetTask = () => {
+    changePending(idList, itemName, quantity);
   }
 
   return (
@@ -79,7 +79,7 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
 
       <div className="todo-item-btns">
         <button className="delete-todo-btn" onClick={() => deleteToDo(idList, itemName)}>Borrar</button>
-        <button className="reset-todo-btn" onClick={() => resetTask(idList, itemName)}>Reestablecer</button>
+        <button className="reset-todo-btn" onClick={resetTask}>Reestablecer</button>
       </div>
     </li>
   )

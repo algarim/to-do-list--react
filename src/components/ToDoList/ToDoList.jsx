@@ -1,8 +1,9 @@
 import ToDoItem from "../ToDoItem/ToDoItem"
 import { useState, useContext } from "react";
 import { ToDoContext } from "../../context/ToDoContext";
-import { useParams } from "react-router-dom";
-import Swal from "sweetalert2";
+import { Navigate, useParams } from "react-router-dom";
+import DeleteListPopUp from "../DeleteListPopUp/DeleteListPopUp";
+import NameListPopUp from "../NameListPopUp/NameListPopUp";
 
 // CSS
 import './ToDoList.css'
@@ -12,7 +13,7 @@ const ToDoList = () => {
     // Create a state for the new task we will add to the list
     const [newTask, setNewTask] = useState({ name: "", quantity: 0, pending: 0 });
 
-    const { lists, addToDo, deleteList } = useContext(ToDoContext);
+    const { lists, addToDo, changeListName } = useContext(ToDoContext);
 
     // Implement useParams to track which list we are working on
     const { idList } = useParams();
@@ -63,16 +64,20 @@ const ToDoList = () => {
     const handleInputChange = (e) => {
         let newTaskName = e.target.value;
         setNewTask({ ...newTask, name: newTaskName });
-    }
+    };
 
-    // Delete list handler
-    /// COMPLETAR
+    const handleNameChange = (newName) => {
+        changeListName(idList, newName);
+    };
 
     return (
         <div className="todo-list-container">
             <h1> Lista de tareas </h1>
 
-            <h2> {selectedList.name} </h2>
+            <div className="list-name lists-item">
+                <h2> {selectedList.name} </h2>
+                < NameListPopUp handleNameChange={handleNameChange} />
+            </div>
 
             <form onSubmit={handleSubmit} className="add-todo-form">
                 <input type="text" value={newTask.name} onChange={handleInputChange} />
@@ -98,7 +103,7 @@ const ToDoList = () => {
                 }
             </ul>
 
-            <button onClick={handleDelete}> Borrar lista </button>
+            <DeleteListPopUp list={selectedList} />
         </div>
     )
 }

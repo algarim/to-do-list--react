@@ -1,0 +1,26 @@
+.lists-item {
+    display: flex;
+    align-items: center;
+}
+
+.lists-item-button {
+    border: 0;
+    padding: 5px;
+    margin: 0;
+    display: none;
+    background-color: inherit;
+}
+
+.lists-item:hover button {
+    display: inline-flex;
+}
+
+.lists-item-button:hover {
+    background-color: initial;
+    opacity: 0.9;
+}
+
+.lists-item img {
+    height: 1.3em;
+    margin: auto;
+}

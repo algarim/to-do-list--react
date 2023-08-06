@@ -1,0 +1,13 @@
+.list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.list a {
+    text-decoration: none;
+    color: #184b6d;
+}
+
+.list a:hover {
+    color: aquamarine;
+}

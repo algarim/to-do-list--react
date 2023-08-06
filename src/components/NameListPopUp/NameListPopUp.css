@@ -1,0 +1,11 @@
+.popup-form-input {
+    width: 100%;
+    border: 1px solid black;
+}
+
+.popup-form-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
