@@ -12,10 +12,10 @@ const Home = () => {
   return (
     <div className="todo-list-container home-container">
 
-      {(lists === []) ? (
+      {( lists.length === 0) ? (
         <>
           <h2 className="page-title mb-2"> Bienvenido/a </h2>
-          <p> Para seguir, seleccione una lista o cree una nueva. </p>
+          <p className="m-0"> Para empezar, creá una nueva lista. </p>
         </>)
         : (
           <h1 className="page-title mb-3">Tus listas de tareas</h1>
