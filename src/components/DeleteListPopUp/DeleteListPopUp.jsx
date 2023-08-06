@@ -5,7 +5,10 @@ import { useContext } from 'react';
 import { ToDoContext } from '../../context/ToDoContext';
 import { Link } from 'react-router-dom';
 
-const DeleteListPopUp = ({list}) => {
+// CSS
+import './DeleteListPopUp.css'
+
+const DeleteListPopUp = ({ list, withIconBtn = false }) => {
 
     // Modal states and functions
     const [show, setShow] = useState(false);
@@ -17,7 +20,7 @@ const DeleteListPopUp = ({list}) => {
     const { lists, deleteList } = useContext(ToDoContext);
 
     // Grab selected list as variable
-   // const selectedList = lists.find(list => list.id === idList);
+    // const selectedList = lists.find(list => list.id === idList);
 
     const handleConfirmation = () => {
         deleteList(list.id);
@@ -26,16 +29,24 @@ const DeleteListPopUp = ({list}) => {
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
-                Borrar lista
-            </Button>
+
+            {withIconBtn ? (
+                <button className="m-lg-0 ms-1 lists-item-button" onClick={handleShow}> <img src="../img/bin.png" alt="edit" /> </button>
+            ) : (
+                <button className='btn-hover-red' onClick={handleShow}>
+                    Borrar lista
+                </button>
+            )}
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>¿Borrar lista?</Modal.Title>
+                    <Modal.Title>Borrar lista "{list.name}"</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>¿Estás seguro de que querés borrar la lista "{list.name}"? Esta acción es irreversible.</Modal.Body>
-                <Modal.Footer>
+                <Modal.Body className='text-center'>
+                    ¿Estás seguro? Esta acción es irreversible.
+                </Modal.Body>
+
+                <Modal.Footer className='delete-popup-footer'>
                     <Button variant="secondary" onClick={handleClose}>
                         Cancelar
                     </Button>
@@ -45,6 +56,7 @@ const DeleteListPopUp = ({list}) => {
                         </Button>
                     </Link>
                 </Modal.Footer>
+
             </Modal>
         </>
     )

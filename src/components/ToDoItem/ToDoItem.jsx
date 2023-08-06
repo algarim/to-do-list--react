@@ -9,8 +9,8 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
   const { lists, deleteToDo, changePending } = useContext(ToDoContext);
 
   // Define variables for the particular toDo we are working with and its pending number:
-  let selectedList = lists.find ( list => list.id === idList );
-  let selectedToDo = selectedList.toDos.find ( toDo => toDo.name === itemName );
+  let selectedList = lists.find(list => list.id === idList);
+  let selectedToDo = selectedList.toDos.find(toDo => toDo.name === itemName);
   let pending = selectedToDo.pending;
 
   // COUNTER
@@ -47,7 +47,7 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
   const completeTask = (e, taskName, numberCompleted) => {
     e.preventDefault();
     if (pending >= numberCompleted) {
-      changePending(idList, taskName, pending - numberCompleted );
+      changePending(idList, taskName, pending - numberCompleted);
       setCounter(1);
     }
   }
@@ -56,6 +56,9 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
   const resetTask = () => {
     changePending(idList, itemName, quantity);
   }
+
+  // Focus handler: make it so it selects input text when on focus
+  const handleFocus = (event) => event.target.select();
 
   return (
     <li className={`${(pending === 0) && 'completed'} todo-item-container`}>
@@ -70,7 +73,7 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
 
         <div className="counter">
           <button type="button" className="counter-btn complete-todo-hover" onClick={decreaseCounter}> - </button>
-          <input type="number" className="counter-input" value={counter} onChange={handleCounterChange} />
+          <input type="number" className="counter-input" value={counter} onChange={handleCounterChange} onFocus={handleFocus} />
           <button type="button" className="counter-btn complete-todo-hover" onClick={increaseCounter}> + </button>
         </div>
 

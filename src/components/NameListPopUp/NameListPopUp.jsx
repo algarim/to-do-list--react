@@ -6,12 +6,22 @@ import { useNavigate } from 'react-router-dom';
 //CSS
 import './NameListPopUp.css'
 
-const NameListPopUp = ({ handleNameChange, buttonDescription, isNewList = false }) => {
+const NameListPopUp = ({ handleNameChange, buttonDescription, isNewList = false, hideLg = false, previousName = '' }) => {
+    // State for new name
+    const [name, setName] = useState(previousName);
+
     // Modal states and functions
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => {
+       // setName('');
+        setShow(false);
+    };
+
+    const handleShow = () => {
+        setName(previousName);
+        setShow(true);
+    };
 
     // Define pop up description depending if it is a new or a previously existing list
     let popUpDescription = isNewList ? 'Crear nueva lista' : 'Cambiar nombre de la lista';
@@ -19,8 +29,6 @@ const NameListPopUp = ({ handleNameChange, buttonDescription, isNewList = false 
     // Set up useNavigate
     const navigate = useNavigate();
 
-    // State for new name
-    const [name, setName] = useState('');
 
     // Handler
     const handleConfirmation = (e) => {
@@ -40,11 +48,11 @@ const NameListPopUp = ({ handleNameChange, buttonDescription, isNewList = false 
     return (
         <>
             {isNewList ? (
-                <button variant="primary" onClick={handleShow}>
-                    {buttonDescription}
+                <button className='add-list-btn' onClick={handleShow}>
+                   <p className='m-0'> {buttonDescription} </p>  
                 </button>
             ) : (
-                <button className="m-0 lists-item-button" onClick={handleShow}> <img src="../img/pen.png" alt="edit" /> </button>
+                <button className={`m-lg-0 ms-1 lists-item-button ${hideLg && 'd-lg-none'}`} onClick={handleShow}> <img src="../img/pen.png" alt="edit" /> </button>
             )}
 
 

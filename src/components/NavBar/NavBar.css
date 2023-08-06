@@ -1,0 +1,19 @@
+#navbar {
+    background-color: rgb(231, 212, 243) !important;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 992px) {
+    #navbar .add-list-btn {
+        padding: 8px 15px;
+        align-self: center;
+
+        border: 0;
+        border-radius: 25px;
+    }
+
+    /*#navbar .add-list-btn p {
+        margin: 0;
+        padding-bottom: 3px;
+    }*/
+}

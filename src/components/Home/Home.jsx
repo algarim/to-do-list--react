@@ -10,11 +10,19 @@ const Home = () => {
   const { lists, addList } = useContext(ToDoContext)
 
   return (
-    <div className="todo-list-container">
-      <h2> Bienvenido/a </h2>
-      <p> Para seguir, seleccione una lista o cree una nueva. </p>
+    <div className="todo-list-container home-container">
 
-      <ul className="list">
+      {(lists === []) ? (
+        <>
+          <h2 className="page-title mb-2"> Bienvenido/a </h2>
+          <p> Para seguir, seleccione una lista o cree una nueva. </p>
+        </>)
+        : (
+          <h1 className="page-title mb-3">Tus listas de tareas</h1>
+        )}
+
+
+      <ul className="list mt-2">
         {
           lists.map(list => (
             <li key={list.id}>

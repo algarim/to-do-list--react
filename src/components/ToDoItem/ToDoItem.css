@@ -27,7 +27,7 @@
 }
 
 li {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     text-align: justify;
     line-height: 1.5;
 
@@ -42,7 +42,7 @@ li {
 }
 
 .todo-quantity{
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     text-align: center;
     font-weight: normal;
     margin: 0;
@@ -80,6 +80,7 @@ li {
     font-weight: bold;
     text-align: center;
     margin-bottom: 12px;
+    margin-top: 5px;
 }
 
 .todo-item-btns{

@@ -14,6 +14,10 @@
     align-items: center;
 }
 
+.todo-list-container .lists-item {
+    justify-content: center;
+}
+
 .add-todo-form {
     display: flex;
     justify-content: center;
@@ -52,6 +56,8 @@
     justify-content: space-evenly;
     gap: 20px;
 
+    list-style-type: none;
+    padding: 0;
 }
 
 
@@ -67,6 +73,6 @@
     .todo-list-container {
         max-width: 90vw;
         padding: 0;
-
+        padding-bottom: 15px;
     }
 }

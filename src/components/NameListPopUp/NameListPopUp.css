@@ -9,3 +9,7 @@
     align-items: center;
     gap: 5px;
 }
+
+.add-list-btn:hover {
+    background-color: aquamarine;
+}

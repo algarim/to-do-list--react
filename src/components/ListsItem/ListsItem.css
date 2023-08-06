@@ -1,18 +1,19 @@
 .lists-item {
     display: flex;
-    align-items: center;
+    align-items: center;   
+    flex-wrap: wrap;
 }
 
 .lists-item-button {
     border: 0;
     padding: 5px;
     margin: 0;
-    display: none;
+    visibility: hidden;
     background-color: inherit;
 }
 
 .lists-item:hover button {
-    display: inline-flex;
+    visibility: visible;
 }
 
 .lists-item-button:hover {
@@ -23,4 +24,10 @@
 .lists-item img {
     height: 1.3em;
     margin: auto;
+}
+
+@media (max-width: 991px) {
+    .lists-item-button {
+        visibility: visible;
+    }
 }

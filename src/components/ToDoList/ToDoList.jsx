@@ -46,6 +46,9 @@ const ToDoList = () => {
         (input > 1) ? setCounter(input) : setCounter(1);
     }
 
+    // Counter Focus handler: make it so it selects input text when on focus
+    const handleFocus = (event) => event.target.select();
+
     // Function that handles the submit event: adds the new task to the list
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -72,11 +75,10 @@ const ToDoList = () => {
 
     return (
         <div className="todo-list-container">
-            <h1> Lista de tareas </h1>
 
-            <div className="list-name lists-item">
-                <h2> {selectedList.name} </h2>
-                < NameListPopUp handleNameChange={handleNameChange} />
+            <div className="lists-item fs-5 p-2 mb-2">
+                <h2 className="page-title"> {selectedList.name} </h2>
+                < NameListPopUp handleNameChange={handleNameChange} previousName={selectedList.name} />
             </div>
 
             <form onSubmit={handleSubmit} className="add-todo-form">
@@ -84,7 +86,7 @@ const ToDoList = () => {
 
                 <div className="counter">
                     <button type="button" className="counter-btn" onClick={decreaseCounter}> - </button>
-                    <input type="number" className="counter-input" value={counter} onChange={handleCounterChange} />
+                    <input type="number" className="counter-input" value={counter} onChange={handleCounterChange} onFocus={handleFocus} />
                     <button type="button" className="counter-btn" onClick={increaseCounter}> + </button>
                 </div>
 

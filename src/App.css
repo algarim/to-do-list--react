@@ -21,12 +21,16 @@ button:hover{
     background-color: rgba(199, 223, 255, 0.85);
 }
 
+.btn-hover-red:hover {
+    background-color: rgb(255, 104, 104);
+}
+
 input{
     padding: 8px;
     border: 1px black solid;
     border-right: 0;
     
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-family: 'Space Mono', monospace;
 
     text-align: center;
@@ -41,3 +45,13 @@ ul {
     padding: 0;
 }
 
+.page-title {
+    font-size: 2rem;
+    margin: 0;
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.8rem;
+    }
+}
