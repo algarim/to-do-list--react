@@ -1,8 +1,12 @@
 import { useState, useEffect, createContext } from "react";
+import { UserAuth } from "./AuthContext";
 
 export const ToDoContext = createContext([]);
 
 export const ToDoProvider = ({ children }) => {
+    // Traigo el user del Auth
+    const { user } = UserAuth();
+
     // STATES
 
     // lists of toDos
@@ -39,32 +43,32 @@ export const ToDoProvider = ({ children }) => {
     // METHODS: 
 
     // Add list
-    const addList = (name)  => {
+    const addList = (name) => {
         const id = name.replaceAll(' ', '-').toLowerCase();
-        
-        const existingList = lists.find ( list => list.id === id );
+
+        const existingList = lists.find(list => list.id === id);
         const newListID = existingList ? `${id}-1` : id;
 
         const newList = { id: newListID, name: name, toDos: [] };
-        setLists( [...lists, newList] );
+        setLists([...lists, newList]);
     }
 
     // Change name of list
     const changeListName = (idList, newName) => {
-        const updatedLists = lists.map ( list => {
-            if (list.id === idList){
-                return {id: idList, name: newName, toDos: list.toDos};
+        const updatedLists = lists.map(list => {
+            if (list.id === idList) {
+                return { id: idList, name: newName, toDos: list.toDos };
             } else {
                 return list;
             }
-        } );
+        });
 
         setLists(updatedLists);
     }
 
     // Delete list
     const deleteList = (idList) => {
-        const updatedLists = lists.filter ( list => list.id !== idList );
+        const updatedLists = lists.filter(list => list.id !== idList);
         setLists(updatedLists);
     };
 
