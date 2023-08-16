@@ -1,5 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import { UserAuth } from "./AuthContext";
+import { doc, getDoc, getDocs, collection } from "firebase/firestore";
+import { db } from "../services/config";
 
 export const ToDoContext = createContext([]);
 
@@ -10,18 +12,14 @@ export const ToDoProvider = ({ children }) => {
     // STATES
 
     // lists of toDos
-    const [lists, setLists] = useState(() => {
-        const savedLists = localStorage.getItem("lists");
-
-        const startingLists = savedLists ? JSON.parse(savedLists) : [];
-
-        return startingLists;
-    });
+    const [lists, setLists] = useState([]);
 
     // Save the list in localStorage every time it changes
-    useEffect(() => {
+    /*useEffect(() => {
         localStorage.setItem('lists', JSON.stringify(lists))
-    }, [lists])
+    }, [lists])*/
+
+    // set value of lists using db and useEffect
 
 
     // Auxiliary function:
@@ -40,11 +38,28 @@ export const ToDoProvider = ({ children }) => {
     }
 
 
-    // METHODS: 
+    // METHODS:
+    
+    // Select list:
+    const selectList = (idList) => {
+        const collectionRef = collection(db, user.uid, idList );
+        getDocs( collectionRef )
+        .then( res => {
+            const selectedList = res.map( (doc) => {
+                const data = doc.data(); 
+                return {id: doc.id, ...data };
+            } )
+
+            setList(selectedList);
+        } )
+        .catch(error => console.log(error))
+    }
 
     // Add list
     const addList = (name) => {
         const id = name.replaceAll(' ', '-').toLowerCase();
+
+        
 
         const existingList = lists.find(list => list.id === id);
         const newListID = existingList ? `${id}-1` : id;
@@ -136,7 +151,7 @@ export const ToDoProvider = ({ children }) => {
     };
 
     return (
-        <ToDoContext.Provider value={{ lists, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
+        <ToDoContext.Provider value={{ lists, selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
             {children}
         </ToDoContext.Provider>
     )
