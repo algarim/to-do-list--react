@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext } from "react";
 import { UserAuth } from "./AuthContext";
-import { doc, getDoc, getDocs, collection } from "firebase/firestore";
+import { doc, setDoc, collection, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../services/config";
 
 export const ToDoContext = createContext([]);
@@ -11,18 +11,9 @@ export const ToDoProvider = ({ children }) => {
 
     // STATES
 
-    // lists of toDos
-    const [lists, setLists] = useState([]);
+    // completar
 
-    // Save the list in localStorage every time it changes
-    /*useEffect(() => {
-        localStorage.setItem('lists', JSON.stringify(lists))
-    }, [lists])*/
-
-    // set value of lists using db and useEffect
-
-
-    // Auxiliary function:
+    // Auxiliary function
     // Function that replaces a specific list by another one provided as an argument
     function changeList(idList, newList) {
 
@@ -39,52 +30,47 @@ export const ToDoProvider = ({ children }) => {
 
 
     // METHODS:
-    
+
     // Select list:
     const selectList = (idList) => {
-        const collectionRef = collection(db, user.uid, idList );
-        getDocs( collectionRef )
-        .then( res => {
-            const selectedList = res.map( (doc) => {
-                const data = doc.data(); 
-                return {id: doc.id, ...data };
-            } )
+        const collectionRef = collection(db, user.uid, lists, idList);
+        getDocs(collectionRef)
+            .then(res => {
+                const selectedList = res.map((doc) => {
+                    const data = doc.data();
+                    return { id: doc.id, ...data };
+                })
 
-            setList(selectedList);
-        } )
-        .catch(error => console.log(error))
+                setList(selectedList);
+            })
+            .catch(error => console.log(error))
     }
 
     // Add list
     const addList = (name) => {
         const id = name.replaceAll(' ', '-').toLowerCase();
 
-        
+        const listRef = doc(db, "users", user.uid, lists, id)
 
-        const existingList = lists.find(list => list.id === id);
-        const newListID = existingList ? `${id}-1` : id;
+        getDoc(listRef)
+            .then(existingList => {
+                const newListID = existingList.exists() ? `${id}-1` : id;
+                const newListRef = doc(db, "users", user.uid, lists, newListID);
 
-        const newList = { id: newListID, name: name, toDos: [] };
-        setLists([...lists, newList]);
+                setDoc(newListRef, { name: name, toDos: [] })
+            })
     }
 
     // Change name of list
     const changeListName = (idList, newName) => {
-        const updatedLists = lists.map(list => {
-            if (list.id === idList) {
-                return { id: idList, name: newName, toDos: list.toDos };
-            } else {
-                return list;
-            }
-        });
-
-        setLists(updatedLists);
+        const listRef = doc(db, "users", lists, idList);
+        updateDoc(listRef, { name: newName });
     }
 
     // Delete list
     const deleteList = (idList) => {
-        const updatedLists = lists.filter(list => list.id !== idList);
-        setLists(updatedLists);
+        const listRef = doc(db, "users", lists, idList);
+        deleteDoc(listRef);
     };
 
     // Delete to-do from list
