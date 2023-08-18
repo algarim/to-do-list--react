@@ -38,10 +38,6 @@ const SignIn = () => {
                 < GoogleButton onClick={handleGoogleSignIn} />
             </div>
 
-            <button className="mt-5" onClick={setTest}> Set Test </button>
-            <button className="mt-5" onClick={getTest}> Get Test </button>
-
-
         </div>
     )
 }

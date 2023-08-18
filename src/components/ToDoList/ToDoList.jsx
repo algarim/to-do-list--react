@@ -23,13 +23,15 @@ const ToDoList = () => {
 
     // State for toDos of currently selected list
     const [toDos, setToDos] = useState( [] );
+    const [listName, setListName] = useState('');
 
     // useEffect to create snapshot of currently selected list
     useEffect( () => {
-        const listRef = doc(db, "users", user.uid, lists, idList);
+        const listRef = doc(db, "users", user.uid, "lists", idList);
         onSnapshot( listRef, (doc) => {
             const list = doc.data();
             setToDos(list.toDos);
+            setListName(list.name);
         } )
     }, [] )
 
@@ -88,8 +90,8 @@ const ToDoList = () => {
         <div className="todo-list-container">
 
             <div className="lists-item fs-5 p-2 mb-2">
-                <h2 className="page-title"> {selectedList.name} </h2>
-                < NameListPopUp handleNameChange={handleNameChange} previousName={selectedList.name} />
+                <h2 className="page-title"> {listName} </h2>
+                < NameListPopUp handleNameChange={handleNameChange} previousName={listName} />
             </div>
 
             <form onSubmit={handleSubmit} className="add-todo-form">
@@ -116,7 +118,7 @@ const ToDoList = () => {
                 }
             </ul>
 
-            <DeleteListPopUp list={selectedList} />
+            <DeleteListPopUp listName={listName} listId = {idList} />
         </div>
     )
 }

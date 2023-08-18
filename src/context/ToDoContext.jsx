@@ -13,25 +13,26 @@ export const ToDoProvider = ({ children }) => {
     // array of all lists' names and ids
     const [listsNames, setListsNames] = useState([]);
 
+    /*useEffect(() => {
+        if (user) {
+            const collectionRef = collection(db, user.uid, "lists");
+            onSnapshot(collectionRef, (snapshot) => {
+                let listsArray = [];
+                snapshot?.docs.forEach((doc) => {
+                    const listData = doc.data();
+                    listsArray = [...listsArray, { id: doc.id, name: listData.name }];
+                });
 
-    useEffect(() => {
-        const collectionRef = collection(db, user.uid, lists);
-        onSnapshot(collectionRef, (snapshot) => {
-            let listsArray = [];
-            snapshot?.docs.forEach( (doc) => {
-                const listData = doc.data();
-                listsArray = [...listsArray, {id: doc.id, name: listData.name}]; 
-            });
-
-            setListsNames(listsArray);
-        })
-    }, [user])
+                setListsNames(listsArray);
+            })
+        }
+    }, [user])*/
 
     // METHODS:
 
     // Select list:
     const selectList = (idList) => {
-        const collectionRef = collection(db, user.uid, lists, idList);
+        const collectionRef = collection(db, user.uid, "lists", idList);
         getDocs(collectionRef)
             .then(res => {
                 const selectedList = res.map((doc) => {
@@ -48,12 +49,12 @@ export const ToDoProvider = ({ children }) => {
     const addList = (name) => {
         const id = name.replaceAll(' ', '-').toLowerCase();
 
-        const listRef = doc(db, "users", user.uid, lists, id)
+        const listRef = doc(db, "users", user.uid, "lists", id)
 
         getDoc(listRef)
             .then(existingList => {
                 const newListID = existingList.exists() ? `${id}-1` : id;
-                const newListRef = doc(db, "users", user.uid, lists, newListID);
+                const newListRef = doc(db, "users", user.uid, "lists", newListID);
 
                 setDoc(newListRef, { name: name, toDos: [] })
                     .catch(error => console.log(error))
@@ -63,20 +64,20 @@ export const ToDoProvider = ({ children }) => {
 
     // Change name of list
     const changeListName = (idList, newName) => {
-        const listRef = doc(db, "users", user.uid, lists, idList);
+        const listRef = doc(db, "users", user.uid, "lists", idList);
         updateDoc(listRef, { name: newName })
             .catch(error => console.log(error))
     }
 
     // Delete list
     const deleteList = (idList) => {
-        const listRef = doc(db, "users", user.uid, lists, idList);
+        const listRef = doc(db, "users", user.uid, "lists", idList);
         deleteDoc(listRef);
     };
 
     // Delete to-do from list
     const deleteToDo = (idList, toDo) => {
-        const listRef = doc(db, "users", user.uid, lists, idList);
+        const listRef = doc(db, "users", user.uid, "lists", idList);
 
         updateDoc(listRef, {
             toDos: arrayRemove(toDo)
@@ -85,7 +86,7 @@ export const ToDoProvider = ({ children }) => {
 
     // Add to-do to list
     const addToDo = (idList, task, quantity) => {
-        const listRef = doc(db, "users", user.uid, lists, idList);
+        const listRef = doc(db, "users", user.uid, "lists", idList);
 
         getDoc(listRef)
             .then(res => {
@@ -121,7 +122,7 @@ export const ToDoProvider = ({ children }) => {
 
     // Change "pending" number on a given task
     const changePending = (idList, task, newPending) => {
-        const listRef = doc(db, "users", user.uid, lists, idList);
+        const listRef = doc(db, "users", user.uid, "lists", idList);
 
         getDoc(listRef)
             .then(res => {
@@ -147,7 +148,7 @@ export const ToDoProvider = ({ children }) => {
     };
 
     return (
-        <ToDoContext.Provider value={{ list, listsNames, selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
+        <ToDoContext.Provider value={{ listsNames, selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
             {children}
         </ToDoContext.Provider>
     )

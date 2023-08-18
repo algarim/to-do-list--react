@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 // CSS
 import './DeleteListPopUp.css'
 
-const DeleteListPopUp = ({ list, withIconBtn = false }) => {
+const DeleteListPopUp = ({ listName, listId, withIconBtn = false }) => {
 
     // Modal states and functions
     const [show, setShow] = useState(false);
@@ -23,7 +23,7 @@ const DeleteListPopUp = ({ list, withIconBtn = false }) => {
     // const selectedList = lists.find(list => list.id === idList);
 
     const handleConfirmation = () => {
-        deleteList(list.id);
+        deleteList(listId);
         handleClose();
     }
 

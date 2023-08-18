@@ -30,7 +30,7 @@ const Home = () => {
   return (
     <div className="todo-list-container home-container">
 
-      {(lists.length === 0) ? (
+      {(listsNames.length === 0) ? (
         <>
           <h2 className="page-title mb-2"> Bienvenido/a </h2>
           <p className="m-0"> Para empezar, creá una nueva lista. </p>
