@@ -1,9 +1,11 @@
 import ToDoItem from "../ToDoItem/ToDoItem"
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ToDoContext } from "../../context/ToDoContext";
 import { useParams } from "react-router-dom";
 import DeleteListPopUp from "../DeleteListPopUp/DeleteListPopUp";
 import NameListPopUp from "../NameListPopUp/NameListPopUp";
+import { doc, onSnapshot } from "firebase/firestore";
+import { UserAuth } from "../../context/AuthContext";
 
 // CSS
 import './ToDoList.css'
@@ -13,14 +15,23 @@ const ToDoList = () => {
     // Create a state for the new task we will add to the list
     const [newTask, setNewTask] = useState({ name: "", quantity: 0, pending: 0 });
 
-    const { lists, addToDo, changeListName } = useContext(ToDoContext);
+    const { addToDo, changeListName } = useContext(ToDoContext);
+    const {user} = UserAuth
 
     // Implement useParams to track which list we are working on
     const { idList } = useParams();
 
-    // Define a variable for the toDos of the selected list
-    let selectedList = lists.find(list => list.id === idList);
-    let toDos = selectedList.toDos;
+    // State for toDos of currently selected list
+    const [toDos, setToDos] = useState( [] );
+
+    // useEffect to create snapshot of currently selected list
+    useEffect( () => {
+        const listRef = doc(db, "users", user.uid, lists, idList);
+        onSnapshot( listRef, (doc) => {
+            const list = doc.data();
+            setToDos(list.toDos);
+        } )
+    }, [] )
 
     // COUNTER
 

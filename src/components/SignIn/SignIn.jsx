@@ -26,29 +26,6 @@ const SignIn = () => {
         }
     }, [user])
 
-    let id = "algo2"
-
-    function setTest() {
-        const docRef = doc(db, "users_lists", id);
-
-        setDoc(docRef, { cosas: "cositas" }, { merge: true })
-            .then(res => console.log("Elemento creado en db"))
-            .catch(error => console.log("Error al crear nuevo doc: ", error))
-    }
-
-    function getTest() {
-        const docRef = doc(db, "users_lists", id);
-
-        getDoc(docRef)
-            .then(res => {
-                console.log("¿Existe el documento? ", res.exists())
-
-                if (!res.exists()) { setTest(); }
-
-            })
-            .catch(error => console.log("Error en la query: ", error))
-    }
-
 
     return (
         <div className="todo-list-container signin-container">

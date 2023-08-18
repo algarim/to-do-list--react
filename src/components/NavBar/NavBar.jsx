@@ -12,7 +12,7 @@ import { UserAuth } from '../../context/AuthContext';
 import './NavBar.css'
 
 const NavBar = () => {
-    const { lists, addList } = useContext(ToDoContext);
+    const { listsNames, addList } = useContext(ToDoContext);
     const { user } = UserAuth();
 
     return (
@@ -27,7 +27,7 @@ const NavBar = () => {
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="me-auto">
                                 {
-                                    lists.map((list) => (
+                                    listsNames.map((list) => (
                                         <ListsItem key={list.id} list={list} />
                                     ))
                                 }

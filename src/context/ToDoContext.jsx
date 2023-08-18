@@ -1,6 +1,6 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import { UserAuth } from "./AuthContext";
-import { doc, setDoc, collection, getDoc, updateDoc, deleteDoc, arrayRemove, arrayUnion } from "firebase/firestore";
+import { doc, setDoc, collection, getDoc, updateDoc, deleteDoc, arrayRemove, arrayUnion, onSnapshot } from "firebase/firestore";
 import { db } from "../services/config";
 
 export const ToDoContext = createContext([]);
@@ -10,8 +10,22 @@ export const ToDoProvider = ({ children }) => {
     const { user } = UserAuth();
 
     // STATES
+    // array of all lists' names and ids
+    const [listsNames, setListsNames] = useState([]);
 
-    const [lists, setLists] = useState([]);
+
+    useEffect(() => {
+        const collectionRef = collection(db, user.uid, lists);
+        onSnapshot(collectionRef, (snapshot) => {
+            let listsArray = [];
+            snapshot?.docs.forEach( (doc) => {
+                const listData = doc.data();
+                listsArray = [...listsArray, {id: doc.id, name: listData.name}]; 
+            });
+
+            setListsNames(listsArray);
+        })
+    }, [user])
 
     // METHODS:
 
@@ -20,7 +34,7 @@ export const ToDoProvider = ({ children }) => {
         const collectionRef = collection(db, user.uid, lists, idList);
         getDocs(collectionRef)
             .then(res => {
-                const selectedList = res.map( (doc) => {
+                const selectedList = res.map((doc) => {
                     const data = doc.data();
                     return { id: doc.id, ...data };
                 })
@@ -56,7 +70,7 @@ export const ToDoProvider = ({ children }) => {
 
     // Delete list
     const deleteList = (idList) => {
-        const listRef = doc(db, "users", lists, idList);
+        const listRef = doc(db, "users", user.uid, lists, idList);
         deleteDoc(listRef);
     };
 
@@ -91,15 +105,15 @@ export const ToDoProvider = ({ children }) => {
                     })
 
                     updateDoc(listRef, { toDos: updatedToDos })
-                    .catch(error => console.log(error))
+                        .catch(error => console.log(error))
                 }
 
                 else {
-                    updateDoc(listRef, { 
-                        toDos: arrayUnion( { name: task, quantity: quantity, pending: quantity } ) 
+                    updateDoc(listRef, {
+                        toDos: arrayUnion({ name: task, quantity: quantity, pending: quantity })
                     })
-                    .catch(error => console.log(error))
-               }
+                        .catch(error => console.log(error))
+                }
             })
             .catch(error => console.log(error))
     }
@@ -110,30 +124,30 @@ export const ToDoProvider = ({ children }) => {
         const listRef = doc(db, "users", user.uid, lists, idList);
 
         getDoc(listRef)
-        .then( res => {
-            const selectedList = res.data();
+            .then(res => {
+                const selectedList = res.data();
 
-            const toDos = selectedList.toDos;
+                const toDos = selectedList.toDos;
 
-            const selectedToDo = toDos.find(toDo => toDo.name === task);
-    
-            const updatedToDos = toDos.map(toDo => {
-                if (toDo === selectedToDo) {
-                    return { ...selectedToDo, pending: newPending };
-                }
-                else {
-                    return toDo;
-                }
+                const selectedToDo = toDos.find(toDo => toDo.name === task);
+
+                const updatedToDos = toDos.map(toDo => {
+                    if (toDo === selectedToDo) {
+                        return { ...selectedToDo, pending: newPending };
+                    }
+                    else {
+                        return toDo;
+                    }
+                })
+
+                updateDoc(listRef, { toDos: updatedToDos })
+                    .catch(error => console.log(error))
             })
-    
-            updateDoc(listRef, {toDos: updatedToDos})
-            .catch( error => console.log(error) )
-        } )
-        .catch( error => console.log(error) )
+            .catch(error => console.log(error))
     };
 
     return (
-        <ToDoContext.Provider value={{ selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
+        <ToDoContext.Provider value={{ list, listsNames, selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
             {children}
         </ToDoContext.Provider>
     )

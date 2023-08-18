@@ -8,7 +8,7 @@ import { UserAuth } from "../../context/AuthContext"
 import './Home.css'
 
 const Home = () => {
-  const { lists, addList } = useContext(ToDoContext);
+  const { listsNames, addList } = useContext(ToDoContext);
   const { user, logOut } = UserAuth();
 
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const Home = () => {
 
       <ul className="list mt-2">
         {
-          lists.map(list => (
+          listsNames.map( (list) => (
             <li key={list.id}>
               <Link to={`/list/${list.id}`}> {list.name} </Link>
             </li>
