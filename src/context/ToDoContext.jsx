@@ -1,6 +1,6 @@
-import { useState, useEffect, createContext } from "react";
+import { useState, createContext } from "react";
 import { UserAuth } from "./AuthContext";
-import { doc, setDoc, collection, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getDoc, updateDoc, deleteDoc, arrayRemove, arrayUnion } from "firebase/firestore";
 import { db } from "../services/config";
 
 export const ToDoContext = createContext([]);
@@ -11,23 +11,7 @@ export const ToDoProvider = ({ children }) => {
 
     // STATES
 
-    // completar
-
-    // Auxiliary function
-    // Function that replaces a specific list by another one provided as an argument
-    function changeList(idList, newList) {
-
-        const updatedLists = lists.map(list => {
-            if (list.id === idList) {
-                return { id: idList, name: list.name, toDos: newList };
-            } else {
-                return list;
-            }
-        })
-
-        return updatedLists;
-    }
-
+    const [lists, setLists] = useState([]);
 
     // METHODS:
 
@@ -36,7 +20,7 @@ export const ToDoProvider = ({ children }) => {
         const collectionRef = collection(db, user.uid, lists, idList);
         getDocs(collectionRef)
             .then(res => {
-                const selectedList = res.map((doc) => {
+                const selectedList = res.map( (doc) => {
                     const data = doc.data();
                     return { id: doc.id, ...data };
                 })
@@ -58,13 +42,16 @@ export const ToDoProvider = ({ children }) => {
                 const newListRef = doc(db, "users", user.uid, lists, newListID);
 
                 setDoc(newListRef, { name: name, toDos: [] })
+                    .catch(error => console.log(error))
             })
+            .catch(error => console.log(error))
     }
 
     // Change name of list
     const changeListName = (idList, newName) => {
-        const listRef = doc(db, "users", lists, idList);
-        updateDoc(listRef, { name: newName });
+        const listRef = doc(db, "users", user.uid, lists, idList);
+        updateDoc(listRef, { name: newName })
+            .catch(error => console.log(error))
     }
 
     // Delete list
@@ -74,70 +61,79 @@ export const ToDoProvider = ({ children }) => {
     };
 
     // Delete to-do from list
-    const deleteToDo = (idList, taskName) => {
-        const selectedList = lists.find(list => list.id === idList);
-        const toDos = selectedList.toDos;
-        const newToDos = toDos.filter((toDo) => toDo.name !== taskName);
+    const deleteToDo = (idList, toDo) => {
+        const listRef = doc(db, "users", user.uid, lists, idList);
 
-        const newLists = changeList(idList, newToDos);
-        setLists(newLists);
+        updateDoc(listRef, {
+            toDos: arrayRemove(toDo)
+        })
     }
 
     // Add to-do to list
     const addToDo = (idList, task, quantity) => {
-        const selectedList = lists.find(list => list.id === idList);
-        const toDos = selectedList.toDos;
-        const existingToDo = toDos.find(toDo => toDo.name === task);
+        const listRef = doc(db, "users", user.uid, lists, idList);
 
-        if (existingToDo) {
-            const updatedToDos = toDos.map(toDo => {
-                if (toDo === existingToDo) {
-                    return { ...existingToDo, quantity: existingToDo.quantity + quantity, pending: existingToDo.pending + quantity };
+        getDoc(listRef)
+            .then(res => {
+                const selectedList = res.data();
+                const toDos = selectedList.toDos;
+                const existingToDo = toDos.find(toDo => toDo.name === task);
+
+                if (existingToDo) {
+                    // It toDo existes, then I update the corresponding toDos using a map function
+                    const updatedToDos = toDos.map(toDo => {
+                        if (toDo === existingToDo) {
+                            return { ...existingToDo, quantity: existingToDo.quantity + quantity, pending: existingToDo.pending + quantity };
+                        }
+                        else {
+                            return toDo;
+                        }
+                    })
+
+                    updateDoc(listRef, { toDos: updatedToDos })
+                    .catch(error => console.log(error))
                 }
+
                 else {
-                    return toDo;
-                }
+                    updateDoc(listRef, { 
+                        toDos: arrayUnion( { name: task, quantity: quantity, pending: quantity } ) 
+                    })
+                    .catch(error => console.log(error))
+               }
             })
-
-            const updatedLists = changeList(idList, updatedToDos);
-            setLists(updatedLists);
-        }
-
-        else {
-            const newToDo = {
-                name: task,
-                quantity: quantity,
-                pending: quantity
-            }
-
-            const updatedLists = changeList(idList, [...toDos, newToDo]);
-            setLists(updatedLists);
-        }
+            .catch(error => console.log(error))
     }
 
 
     // Change "pending" number on a given task
     const changePending = (idList, task, newPending) => {
-        const selectedList = lists.find(list => list.id === idList);
-        const toDos = selectedList.toDos;
+        const listRef = doc(db, "users", user.uid, lists, idList);
 
-        const selectedToDo = toDos.find(toDo => toDo.name === task);
+        getDoc(listRef)
+        .then( res => {
+            const selectedList = res.data();
 
-        const updatedToDos = toDos.map(toDo => {
-            if (toDo === selectedToDo) {
-                return { ...selectedToDo, pending: newPending };
-            }
-            else {
-                return toDo;
-            }
-        })
+            const toDos = selectedList.toDos;
 
-        const updatedLists = changeList(idList, updatedToDos);
-        setLists(updatedLists);
+            const selectedToDo = toDos.find(toDo => toDo.name === task);
+    
+            const updatedToDos = toDos.map(toDo => {
+                if (toDo === selectedToDo) {
+                    return { ...selectedToDo, pending: newPending };
+                }
+                else {
+                    return toDo;
+                }
+            })
+    
+            updateDoc(listRef, {toDos: updatedToDos})
+            .catch( error => console.log(error) )
+        } )
+        .catch( error => console.log(error) )
     };
 
     return (
-        <ToDoContext.Provider value={{ lists, selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
+        <ToDoContext.Provider value={{ selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
             {children}
         </ToDoContext.Provider>
     )

@@ -1,7 +1,7 @@
 import ToDoItem from "../ToDoItem/ToDoItem"
 import { useState, useContext } from "react";
 import { ToDoContext } from "../../context/ToDoContext";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import DeleteListPopUp from "../DeleteListPopUp/DeleteListPopUp";
 import NameListPopUp from "../NameListPopUp/NameListPopUp";
 
