@@ -1,6 +1,7 @@
 import ToDoList from "./components/ToDoList/ToDoList"
 import NavBar from "./components/NavBar/NavBar"
 import Home from "./components/Home/Home"
+import Footer from "./components/Footer/Footer"
 import { ToDoProvider } from "./context/ToDoContext"
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom"
 import { AuthContextProvider } from "./context/AuthContext"
@@ -25,7 +26,7 @@ const App = () => {
             <NavBar />
 
             <Routes>
-            <Route path="/" element={<SignIn />} />
+              <Route path="/" element={<SignIn />} />
               <Route path="/home" element={<Home />} />
               <Route path="/list/:idList" element={<ToDoList />} />
               <Route path="/*" element={
@@ -34,6 +35,8 @@ const App = () => {
                 </div>
               } />
             </Routes>
+
+            <Footer />
 
           </ToDoProvider>
 

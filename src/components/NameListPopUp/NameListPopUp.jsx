@@ -48,7 +48,7 @@ const NameListPopUp = ({ handleNameChange, buttonDescription, isNewList = false,
     return (
         <>
             {isNewList ? (
-                <button className='add-list-btn' onClick={handleShow}>
+                <button className='navbar-btn add-list-btn' onClick={handleShow}>
                    <p className='m-0'> {buttonDescription} </p>  
                 </button>
             ) : (

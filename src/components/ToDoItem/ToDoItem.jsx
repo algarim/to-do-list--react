@@ -1,17 +1,31 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ToDoContext } from "../../context/ToDoContext";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../services/config";
+import { UserAuth } from "../../context/AuthContext";
 
 // CSS
 import './ToDoItem.css'
 
 const ToDoItem = ({ idList, itemName, quantity }) => {
 
-  const { lists, deleteToDo, changePending } = useContext(ToDoContext);
+  // Context
+  const { deleteToDo, changePending } = useContext(ToDoContext);
+  const { user } = UserAuth();
 
-  // Define variables for the particular toDo we are working with and its pending number:
-  let selectedList = lists.find(list => list.id === idList);
-  let selectedToDo = selectedList.toDos.find(toDo => toDo.name === itemName);
-  let pending = selectedToDo.pending;
+  // Define state for pending number of the toDo
+  const [pending, setPending] = useState(quantity);
+
+  // Get saved pending from database when rendering page
+  useEffect(() => {
+    const listRef = doc(db, "users", user.uid, "lists", idList);
+    getDoc(listRef)
+      .then(res => {
+        const selectedList = res.data();
+        const selectedToDo = selectedList.toDos.find(toDo => toDo.name === itemName);
+        setPending(selectedToDo.pending);
+      })
+  }, [])
 
   // COUNTER
 
@@ -49,13 +63,15 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
     if (pending >= numberCompleted) {
       changePending(idList, taskName, pending - numberCompleted);
       setCounter(1);
+      setPending(prev => prev - numberCompleted);
     }
   }
 
   // Function that resets "pending" to its original number
   const resetTask = () => {
     changePending(idList, itemName, quantity);
-  }
+    setPending(quantity);
+  };
 
   // Focus handler: make it so it selects input text when on focus
   const handleFocus = (event) => event.target.select();
@@ -81,7 +97,7 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
 
 
       <div className="todo-item-btns">
-        <button className="delete-todo-btn" onClick={() => deleteToDo(idList, itemName)}>Borrar</button>
+        <button className="delete-todo-btn" onClick={() => deleteToDo(idList, {name: itemName, quantity: quantity, pending: pending})}>Borrar</button>
         <button className="reset-todo-btn" onClick={resetTask}>Reestablecer</button>
       </div>
     </li>

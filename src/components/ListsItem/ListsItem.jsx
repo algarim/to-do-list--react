@@ -21,7 +21,7 @@ const ListsItem = ({ list }) => {
                 {list.name}
             </Nav.Link >
             < NameListPopUp handleNameChange={handleNameChange} hideLg={true} previousName={list.name} />
-            < DeleteListPopUp list = {list} withIconBtn={true} />
+            < DeleteListPopUp listName = {list.name} listId={list.id} withIconBtn={true} />
         </div>
     )
 }

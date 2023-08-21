@@ -2,6 +2,14 @@
     padding: 20px;
 }
 
+.loading-gif {
+    display: flex;
+    justify-content: center;
+    height: 70vh;
+    margin-top: 20px;
+}
+
+
 .list {
     list-style-type: disc;
     padding: 0;

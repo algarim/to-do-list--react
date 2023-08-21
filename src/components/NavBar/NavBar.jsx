@@ -13,7 +13,15 @@ import './NavBar.css'
 
 const NavBar = () => {
     const { listsNames, addList } = useContext(ToDoContext);
-    const { user } = UserAuth();
+    const { user,logOut } = UserAuth();
+
+    const handleSignOut = async () => {
+        try {
+          await logOut();
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
     return (
 
@@ -33,6 +41,10 @@ const NavBar = () => {
                                 }
 
                                 <NameListPopUp handleNameChange={addList} buttonDescription={'Nueva lista'} isNewList={true} />
+
+                                <hr />
+
+                                <button className='navbar-btn logout-btn' onClick={handleSignOut}> Cerrar sesión </button>
                             </Nav>
                         </Navbar.Collapse>
                     </Container>

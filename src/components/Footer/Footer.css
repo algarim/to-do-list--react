@@ -1,0 +1,21 @@
+footer {
+    text-align: center;
+
+    border-top: 1px solid black;
+    padding: 10px 2.5%;
+
+    background-color: rgb(222, 193, 240);
+
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+    padding-bottom: 5px;
+}
+
+.disclaimer {
+    font-size: 0.8rem;
+}

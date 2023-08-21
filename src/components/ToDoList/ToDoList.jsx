@@ -6,6 +6,7 @@ import DeleteListPopUp from "../DeleteListPopUp/DeleteListPopUp";
 import NameListPopUp from "../NameListPopUp/NameListPopUp";
 import { doc, onSnapshot } from "firebase/firestore";
 import { UserAuth } from "../../context/AuthContext";
+import { db } from "../../services/config";
 
 // CSS
 import './ToDoList.css'
@@ -16,24 +17,24 @@ const ToDoList = () => {
     const [newTask, setNewTask] = useState({ name: "", quantity: 0, pending: 0 });
 
     const { addToDo, changeListName } = useContext(ToDoContext);
-    const {user} = UserAuth
+    const { user } = UserAuth();
 
     // Implement useParams to track which list we are working on
     const { idList } = useParams();
 
     // State for toDos of currently selected list
-    const [toDos, setToDos] = useState( [] );
+    const [toDos, setToDos] = useState([]);
     const [listName, setListName] = useState('');
 
     // useEffect to create snapshot of currently selected list
-    useEffect( () => {
+    useEffect(() => {
         const listRef = doc(db, "users", user.uid, "lists", idList);
-        onSnapshot( listRef, (doc) => {
+        onSnapshot(listRef, (doc) => {
             const list = doc.data();
             setToDos(list.toDos);
             setListName(list.name);
-        } )
-    }, [] )
+        })
+    }, [idList])
 
     // COUNTER
 
@@ -118,7 +119,7 @@ const ToDoList = () => {
                 }
             </ul>
 
-            <DeleteListPopUp listName={listName} listId = {idList} />
+            <DeleteListPopUp listName={listName} listId={idList} />
         </div>
     )
 }

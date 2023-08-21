@@ -8,24 +8,24 @@ import { UserAuth } from "../../context/AuthContext"
 import './Home.css'
 
 const Home = () => {
-  const { listsNames, addList } = useContext(ToDoContext);
-  const { user, logOut } = UserAuth();
+  const { listsNames, isLoading, addList } = useContext(ToDoContext);
+  const { user } = UserAuth();
 
   const navigate = useNavigate();
-
-  const handleSignOut = async () => {
-    try {
-      await logOut();
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   useEffect(() => {
     if (user === null) {
       navigate('/');
     }
   }, [user])
+
+  if(isLoading) {
+    return (
+      <div className="loading-gif">
+        <img src="../img/loading3.gif" alt="loading" />
+      </div>
+    )
+  }
 
   return (
     <div className="todo-list-container home-container">
@@ -51,8 +51,6 @@ const Home = () => {
       </ul>
 
       <NameListPopUp handleNameChange={addList} buttonDescription={"Crear nueva lista"} isNewList={true} />
-
-      <button onClick={handleSignOut}> Cerrar sesión </button>
 
     </div>
   )

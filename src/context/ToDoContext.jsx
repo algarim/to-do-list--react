@@ -12,21 +12,31 @@ export const ToDoProvider = ({ children }) => {
     // STATES
     // array of all lists' names and ids
     const [listsNames, setListsNames] = useState([]);
+    
+    // loading state (if it hasn't finished fetching data)
+    const [isLoading, setIsLoading] = useState(false);
 
-    /*useEffect(() => {
-        if (user) {
-            const collectionRef = collection(db, user.uid, "lists");
-            onSnapshot(collectionRef, (snapshot) => {
-                let listsArray = [];
-                snapshot?.docs.forEach((doc) => {
-                    const listData = doc.data();
-                    listsArray = [...listsArray, { id: doc.id, name: listData.name }];
-                });
+    useEffect(() => {
+        setIsLoading(true);
 
-                setListsNames(listsArray);
-            })
-        }
-    }, [user])*/
+        setTimeout(() => {
+            if (user) {
+                const collectionRef = collection(db, "users", user.uid, "lists");
+                console.log(collectionRef);
+                onSnapshot(collectionRef, (snapshot) => {
+                    let listsArray = [];
+                    snapshot?.docs.forEach((doc) => {
+                        const listData = doc.data();
+                        listsArray = [...listsArray, { id: doc.id, name: listData.name }];
+                    });
+
+                    setListsNames(listsArray);
+                    setIsLoading(false);
+                })
+            }
+        }, 0);
+
+    }, [user])
 
     // METHODS:
 
@@ -148,7 +158,7 @@ export const ToDoProvider = ({ children }) => {
     };
 
     return (
-        <ToDoContext.Provider value={{ listsNames, selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
+        <ToDoContext.Provider value={{ listsNames, isLoading, selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
             {children}
         </ToDoContext.Provider>
     )

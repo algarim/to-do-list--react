@@ -17,11 +17,9 @@ const DeleteListPopUp = ({ listName, listId, withIconBtn = false }) => {
     const handleShow = () => setShow(true);
 
     // Context
-    const { lists, deleteList } = useContext(ToDoContext);
+    const { deleteList } = useContext(ToDoContext);
 
-    // Grab selected list as variable
-    // const selectedList = lists.find(list => list.id === idList);
-
+    // Handler: confirm button
     const handleConfirmation = () => {
         deleteList(listId);
         handleClose();
@@ -40,7 +38,7 @@ const DeleteListPopUp = ({ listName, listId, withIconBtn = false }) => {
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Borrar lista "{list.name}"</Modal.Title>
+                    <Modal.Title>Borrar lista "{listName}"</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className='text-center'>
                     ¿Estás seguro? Esta acción es irreversible.
