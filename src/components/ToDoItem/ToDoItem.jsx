@@ -25,7 +25,7 @@ const ToDoItem = ({ idList, itemName, quantity }) => {
         const selectedToDo = selectedList.toDos.find(toDo => toDo.name === itemName);
         setPending(selectedToDo.pending);
       })
-  }, [])
+  }, [quantity]);
 
   // COUNTER
 
