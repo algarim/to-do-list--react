@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from 'react-router-dom';
 
 //CSS
 import './NameListPopUp.css'
@@ -26,20 +25,11 @@ const NameListPopUp = ({ handleNameChange, buttonDescription, isNewList = false,
     // Define pop up description depending if it is a new or a previously existing list
     let popUpDescription = isNewList ? 'Crear nueva lista' : 'Cambiar nombre de la lista';
 
-    // Set up useNavigate
-    const navigate = useNavigate();
-
-
     // Handler
     const handleConfirmation = (e) => {
         e.preventDefault();
 
         handleNameChange(name);
-
-        if (isNewList) {
-            let id = name.replaceAll(' ', '-').toLowerCase();
-            navigate(`/list/${id}`)
-        }
 
         setName('');
         handleClose();

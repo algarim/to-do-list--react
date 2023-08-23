@@ -19,6 +19,7 @@ const Home = () => {
     }
   }, [user])
 
+  // loading animation
   if(isLoading) {
     return (
       <div className="loading-gif">

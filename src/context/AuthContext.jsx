@@ -1,10 +1,13 @@
 import { useContext, createContext, useEffect, useState } from "react";
 import { GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../services/config";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ( {children} ) => {
+
+    const navigate = useNavigate();
 
     const [user, setUser] = useState({});
 
@@ -15,7 +18,8 @@ export const AuthContextProvider = ( {children} ) => {
     };
 
     const logOut = () => {
-        signOut(auth);
+        signOut(auth)
+        .then( res => navigate('/home') )
     }
 
     useEffect ( () => {

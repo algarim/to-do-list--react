@@ -1,7 +1,7 @@
 import ToDoItem from "../ToDoItem/ToDoItem"
 import { useState, useContext, useEffect } from "react";
 import { ToDoContext } from "../../context/ToDoContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DeleteListPopUp from "../DeleteListPopUp/DeleteListPopUp";
 import NameListPopUp from "../NameListPopUp/NameListPopUp";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -13,10 +13,12 @@ import './ToDoList.css'
 
 const ToDoList = () => {
 
+    const navigate = useNavigate();
+
     // Create a state for the new task we will add to the list
     const [newTask, setNewTask] = useState({ name: "", quantity: 0, pending: 0 });
 
-    const { addToDo, changeListName } = useContext(ToDoContext);
+    const { addToDo, changeListName, isLoading} = useContext(ToDoContext);
     const { user } = UserAuth();
 
     // Implement useParams to track which list we are working on
@@ -28,13 +30,20 @@ const ToDoList = () => {
 
     // useEffect to create snapshot of currently selected list
     useEffect(() => {
-        const listRef = doc(db, "users", user.uid, "lists", idList);
-        onSnapshot(listRef, (doc) => {
-            const list = doc.data();
-            setToDos(list.toDos);
-            setListName(list.name);
-        })
-    }, [idList])
+        setTimeout(() => {
+            if (user) {
+                const listRef = doc(db, "users", user.uid, "lists", idList);
+                onSnapshot(listRef, (doc) => {
+                    const list = doc.data();
+                    setToDos(list.toDos);
+                    setListName(list.name);
+                })
+            }
+            else {
+                navigate('/home');
+            }
+        }, 0);
+    }, [user, idList])
 
     // COUNTER
 
@@ -86,6 +95,15 @@ const ToDoList = () => {
     const handleNameChange = (newName) => {
         changeListName(idList, newName);
     };
+
+    // loading animation
+    if (isLoading) {
+        return (
+            <div className="loading-gif">
+                <img src="../img/loading3.gif" alt="loading" />
+            </div>
+        )
+    }
 
     return (
         <div className="todo-list-container">

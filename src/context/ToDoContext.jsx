@@ -1,13 +1,17 @@
 import { useState, createContext, useEffect } from "react";
 import { UserAuth } from "./AuthContext";
-import { doc, setDoc, collection, getDoc, updateDoc, deleteDoc, arrayRemove, arrayUnion, onSnapshot } from "firebase/firestore";
+import { doc, collection, getDoc, updateDoc, deleteDoc, arrayRemove, arrayUnion, onSnapshot, addDoc, query, orderBy } from "firebase/firestore";
 import { db } from "../services/config";
+import { useNavigate } from "react-router-dom";
 
 export const ToDoContext = createContext([]);
 
 export const ToDoProvider = ({ children }) => {
     // Traigo el user del Auth
     const { user } = UserAuth();
+
+    // useNavigate
+    const navigate = useNavigate();
 
     // STATES
     // array of all lists' names and ids
@@ -21,8 +25,7 @@ export const ToDoProvider = ({ children }) => {
 
         setTimeout(() => {
             if (user) {
-                const collectionRef = collection(db, "users", user.uid, "lists");
-                console.log(collectionRef);
+                const collectionRef = query(collection(db, "users", user.uid, "lists"), orderBy("name", "asc") );
                 onSnapshot(collectionRef, (snapshot) => {
                     let listsArray = [];
                     snapshot?.docs.forEach((doc) => {
@@ -40,36 +43,13 @@ export const ToDoProvider = ({ children }) => {
 
     // METHODS:
 
-    // Select list:
-    const selectList = (idList) => {
-        const collectionRef = collection(db, user.uid, "lists", idList);
-        getDocs(collectionRef)
-            .then(res => {
-                const selectedList = res.map((doc) => {
-                    const data = doc.data();
-                    return { id: doc.id, ...data };
-                })
-
-                setList(selectedList);
-            })
-            .catch(error => console.log(error))
-    }
-
     // Add list
     const addList = (name) => {
-        const id = name.replaceAll(' ', '-').toLowerCase();
-
-        const listRef = doc(db, "users", user.uid, "lists", id)
-
-        getDoc(listRef)
-            .then(existingList => {
-                const newListID = existingList.exists() ? `${id}-1` : id;
-                const newListRef = doc(db, "users", user.uid, "lists", newListID);
-
-                setDoc(newListRef, { name: name, toDos: [] })
-                    .catch(error => console.log(error))
-            })
-            .catch(error => console.log(error))
+        addDoc( collection(db, "users", user.uid, "lists"), { name: name, toDos: [] } )
+        .then( newDocRef => {
+            navigate(`/list/${newDocRef.id}`);
+        } )
+        .catch(error => console.log(error));
     }
 
     // Change name of list
@@ -158,7 +138,7 @@ export const ToDoProvider = ({ children }) => {
     };
 
     return (
-        <ToDoContext.Provider value={{ listsNames, isLoading, selectList, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
+        <ToDoContext.Provider value={{ listsNames, isLoading, addList, changeListName, deleteList, addToDo, deleteToDo, changePending }}>
             {children}
         </ToDoContext.Provider>
     )
