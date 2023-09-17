@@ -30,7 +30,7 @@ const NavBar = () => {
             {user ? (
                 <Navbar id='navbar' expand="lg" className="bg-body-tertiary">
                     <Container>
-                        <Navbar.Brand as={Link} to="/" >Tus listas</Navbar.Brand>
+                        <Navbar.Brand as={Link} to="/" >Pedidos</Navbar.Brand>
                         <Navbar.Toggle aria-controls="basic-navbar-nav" />
                         <Navbar.Collapse id="basic-navbar-nav">
                             <Nav className="me-auto">

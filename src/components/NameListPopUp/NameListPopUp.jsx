@@ -23,7 +23,7 @@ const NameListPopUp = ({ handleNameChange, buttonDescription, isNewList = false,
     };
 
     // Define pop up description depending if it is a new or a previously existing list
-    let popUpDescription = isNewList ? 'Crear nueva lista' : 'Cambiar nombre de la lista';
+    let popUpDescription = isNewList ? 'Crear nuevo pedido' : 'Cambiar nombre del pedido';
 
     // Handler
     const handleConfirmation = (e) => {

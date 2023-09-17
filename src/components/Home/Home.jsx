@@ -34,10 +34,10 @@ const Home = () => {
       {(listsNames.length === 0) ? (
         <>
           <h2 className="page-title mb-2"> Bienvenido/a </h2>
-          <p className="m-0"> Para empezar, creá una nueva lista. </p>
+          <p className="m-0"> Para empezar, creá una nueva pedido. </p>
         </>)
         : (
-          <h1 className="page-title mb-3">Listas</h1>
+          <h1 className="page-title mb-3">Pedidos</h1>
         )}
 
 
@@ -51,7 +51,7 @@ const Home = () => {
         }
       </ul>
 
-      <NameListPopUp handleNameChange={addList} buttonDescription={"Crear nueva lista"} isNewList={true} />
+      <NameListPopUp handleNameChange={addList} buttonDescription={"Crear nuevo pedido"} isNewList={true} />
 
     </div>
   )
