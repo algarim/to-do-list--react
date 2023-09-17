@@ -37,7 +37,7 @@ const Home = () => {
           <p className="m-0"> Para empezar, creá una nueva lista. </p>
         </>)
         : (
-          <h1 className="page-title mb-3">Listas de tareas</h1>
+          <h1 className="page-title mb-3">Listas</h1>
         )}
 
 
