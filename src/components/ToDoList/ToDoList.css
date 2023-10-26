@@ -18,6 +18,10 @@
     justify-content: center;
 }
 
+.todo-list-container .page-title {
+    margin-left: 45px;
+}
+
 .add-todo-form {
     display: flex;
     justify-content: center;
@@ -25,6 +29,18 @@
     flex-wrap: wrap;
 
     margin: 0 5px 15px 5px
+}
+
+.number-of-items {
+    text-align: center;
+}
+
+.number-of-items h4 {
+    font-weight: normal;
+}
+
+.number-of-items h5 {
+    color: rgb(230, 0, 0);
 }
 
 .counter {
@@ -61,8 +77,13 @@
 }
 
 
-@media (max-width: 756px) {
+@media (max-width: 991px) {
+    .todo-list-container .page-title {
+        margin-left: 0;
+    }
+}
 
+@media (max-width: 756px) {
     .todo-list-container {
         max-width: 85vw;
 

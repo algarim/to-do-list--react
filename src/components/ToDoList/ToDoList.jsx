@@ -18,7 +18,7 @@ const ToDoList = () => {
     // Create a state for the new task we will add to the list
     const [newTask, setNewTask] = useState({ name: "", quantity: 0, pending: 0 });
 
-    const { addToDo, changeListName, isLoading} = useContext(ToDoContext);
+    const { addToDo, changeListName, isLoading } = useContext(ToDoContext);
     const { user } = UserAuth();
 
     // Implement useParams to track which list we are working on
@@ -27,6 +27,9 @@ const ToDoList = () => {
     // State for toDos of currently selected list
     const [toDos, setToDos] = useState([]);
     const [listName, setListName] = useState('');
+
+    let totalTasks = toDos.reduce((partialSum, toDo) => partialSum + toDo.quantity, 0);
+    let pendingTasks = toDos.reduce((partialSum, toDo) => partialSum + toDo.pending, 0);
 
     // useEffect to create snapshot of currently selected list
     useEffect(() => {
@@ -43,7 +46,11 @@ const ToDoList = () => {
                 navigate('/home');
             }
         }, 0);
-    }, [user, idList])
+    }, [user, idList]);
+
+    useEffect(() => {
+
+    }, [])
 
     // COUNTER
 
@@ -111,6 +118,16 @@ const ToDoList = () => {
             <div className="lists-item fs-5 p-2 mb-2">
                 <h2 className="page-title"> {listName} </h2>
                 < NameListPopUp handleNameChange={handleNameChange} previousName={listName} />
+            </div>
+
+            <div className="number-of-items mb-2">
+                {(totalTasks === 1) ? (
+                    <h4> 1 producto </h4>
+                ) : (
+                    <h4> {totalTasks} productos </h4>
+                )}
+                
+                <h5> Pendientes: {pendingTasks} </h5>
             </div>
 
             <form onSubmit={handleSubmit} className="add-todo-form">
